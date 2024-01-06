@@ -15,6 +15,7 @@ for function_name in dir(driver_manager):
     if function_name.startswith('visit_'):
         current_visit = getattr(driver_manager, function_name)
         driver, dir_name = current_visit()
+        print(f'Opened {dir_name} in Chrome webdriver...')
         for resolution in resolutions:
             res_tuple = (resolution["width"], resolution["height"])
 

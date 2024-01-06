@@ -16,7 +16,8 @@ By default, a visit_ function should look something like this:
 def visit_site(driver=None):
     if driver is None:
         driver = create_driver()
-    driver.maximize_window()
+    driver.set_window_size(1920, 1080) # Setting the driver to 1920x1080 so navbar buttons display correctly,
+                                                        # driver.maximize_window() does not work.
     driver.get(site_url)
     additional navigation steps if necessary
     return driver, "string_to_be_included_in_path"
@@ -32,7 +33,7 @@ from selenium.webdriver.common.by import By
 def create_driver():
     options = ChromeOptions()
     options.add_experimental_option("detach", True)
-    options.add_argument('--headless')
+    options.add_argument('--headless')  # Driver has to be in headless mode so the resolutions are correct
     driver = webdriver.Chrome(options=options)
     return driver
 
