@@ -1,6 +1,10 @@
 from PIL import Image
 import numpy as np
 
+def get_nav_height(path):
+	img = Image.open(path)
+	arr_img = np.asarray(img)
+	return arr_img.shape[0]
 def post_process_image(path, number_of_pictures, pixels_to_scroll, pixels_scrolled_last, is_landscape):
 	navbar_path = f'{path}/navbar{is_landscape * '_landscape'}.png'
 	img = Image.open(navbar_path)

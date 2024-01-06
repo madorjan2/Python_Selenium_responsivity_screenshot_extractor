@@ -4,7 +4,7 @@ from datetime import datetime
 
 from selenium.webdriver.common.by import By
 
-from image_post_processing import post_process_image
+from image_post_processing import post_process_image, get_nav_height
 import driver_manager
 
 
@@ -23,7 +23,6 @@ for function_name in dir(driver_manager):
 
             landscape = False
 
-
             for current_width, current_height in [res_tuple, res_tuple[::-1]]:
                 driver, dir_name = current_visit(driver)
                 driver.set_window_size(current_width, current_height)
@@ -36,19 +35,21 @@ for function_name in dir(driver_manager):
                                     var navbar = arguments[0];
                                     navbar.parentNode.removeChild(navbar);
                                     """, navbar)
-
+                height_of_navbar = get_nav_height(f"{path}/navbar{landscape * '_landscape'}.png")
                 height_of_page = driver.execute_script("return $(document).height()")
+
+                driver.execute_script(f"window.scrollTo(0, {height_of_navbar})")
 
                 i = 1
                 pixels_to_scroll = current_height // 2
-                previous_pos = -1
-                pixels_scrolled_last = 0
+                previous_pos = 0
+                pixels_scrolled_last = height_of_navbar
                 while previous_pos != driver.execute_script("return window.pageYOffset"):
                     y_pos = driver.execute_script("return window.pageYOffset")
                     pixels_scrolled_last = y_pos - previous_pos
                     previous_pos = y_pos
                     driver.find_element(By.TAG_NAME, 'body').screenshot(f"{path}/screenshot_{landscape * 'landscape_'}{i}.png")
-                    driver.execute_script(f"window.scrollTo(0, {pixels_to_scroll * i})")
+                    driver.execute_script(f"window.scrollTo(0, {height_of_navbar + pixels_to_scroll * i})")
                     i += 1
 
                 post_process_image(path, i-1, pixels_to_scroll, pixels_scrolled_last, landscape)
