@@ -6,6 +6,7 @@ def get_nav_height(path):
 	arr_img = np.asarray(img)
 	return arr_img.shape[0]
 def post_process_image(path, number_of_pictures, pixels_to_scroll, pixels_scrolled_last, is_landscape):
+	print('Merging screenshots...')
 	navbar_path = f'{path}/navbar{is_landscape * '_landscape'}.png'
 	img = Image.open(navbar_path)
 	arr_img = np.asarray(img)

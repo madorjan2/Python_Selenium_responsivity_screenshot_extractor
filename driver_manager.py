@@ -47,15 +47,15 @@ def post_mainpage(driver):
     print('Tearing down mainpage')
     driver.quit()
 
-def visit_register_page(driver=None):
-    if driver is None:
-        driver = create_driver()
-    driver.set_window_size(1920, 1080)
-    driver.get('http://hotel-v3.progmasters.hu/')
-    driver.find_element(By.ID, 'dropbar').click()
-    driver.find_element(By.XPATH, '//a[text()="Vendég"]').click()
-    return driver, "register"
-
-def post_register_page(driver):
-    print('Tearing down register')
-    driver.quit()
+# def visit_register_page(driver=None):
+#     if driver is None:
+#         driver = create_driver()
+#     driver.set_window_size(1920, 1080)
+#     driver.get('http://hotel-v3.progmasters.hu/')
+#     driver.find_element(By.ID, 'dropbar').click()
+#     driver.find_element(By.XPATH, '//a[text()="Vendég"]').click()
+#     return driver, "register"
+#
+# def post_register_page(driver):
+#     print('Tearing down register')
+#     driver.quit()

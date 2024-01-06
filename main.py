@@ -24,6 +24,7 @@ for function_name in dir(driver_manager):
             landscape = False
 
             for current_width, current_height in [res_tuple, res_tuple[::-1]]:
+                print(f'Taking screenshot of {dir_name} in {current_width}x{current_height} {'(landscape)' * landscape}')
                 driver, dir_name = current_visit(driver)
                 driver.set_window_size(current_width, current_height)
                 driver.execute_script(f"window.scrollTo(0,0)")
