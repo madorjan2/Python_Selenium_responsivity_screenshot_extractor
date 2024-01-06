@@ -1,43 +1,37 @@
 import os
+import json
 from datetime import datetime
 
 from selenium.webdriver.common.by import By
-import json
 
-from image_post_process import post_process_image
-import gettourl
+from image_post_processing import post_process_image
+import driver_manager
 
 
-json_file = open('res_list.json')
-resolutions = json.load(json_file)
-additional_path = f'screenshots\\{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}'
-default_path = os.path.join(os.getcwd(), additional_path)
+resolutions = json.load(open('res_list.json'))
+default_path = os.path.join(os.getcwd(), f'screenshots\\{datetime.now().strftime("%Y_%m_%d_%H_%M")}')
 
-for function_name in dir(gettourl):
+for function_name in dir(driver_manager):
     if function_name.startswith('visit_'):
-        current_function = getattr(gettourl, function_name)
-        driver, dirname = current_function()
-        for actual_res in resolutions:
-            print(default_path)
-            res_tuple = (actual_res["width"], actual_res["height"])
-            tuples = [res_tuple, res_tuple[::-1]]
-            device_name = actual_res["device"]
-            current_path = os.getcwd()
+        current_visit = getattr(driver_manager, function_name)
+        driver, dir_name = current_visit()
+        for resolution in resolutions:
+            res_tuple = (resolution["width"], resolution["height"])
 
-            path = os.path.join(default_path, dirname, device_name)
+            path = os.path.join(default_path, dir_name, f'{resolution["width"]}x{resolution["height"]}')
             os.makedirs(path)
 
             landscape = False
 
 
-            for current_width, current_height in tuples:
-                driver, dirname = current_function(driver)
+            for current_width, current_height in [res_tuple, res_tuple[::-1]]:
+                driver, dir_name = current_visit(driver)
+                driver.save_screenshot(f"{path}/test.png")
                 driver.set_window_size(current_width, current_height)
                 driver.execute_script(f"window.scrollTo(0,0)")
 
                 navbar = driver.find_element(By.TAG_NAME, 'nav')
                 navbar.screenshot(f"{path}/navbar{landscape * '_landscape'}.png")
-
 
                 driver.execute_script("""
                                     var navbar = arguments[0];
@@ -59,10 +53,9 @@ for function_name in dir(gettourl):
                     i += 1
 
                 post_process_image(path, i-1, pixels_to_scroll, pixels_scrolled_last, landscape)
-                print(pixels_scrolled_last)
 
                 landscape = not landscape
 
         teardown_function_name = function_name.replace('visit_', 'post_')
-        teardown_function = getattr(gettourl, teardown_function_name)
+        teardown_function = getattr(driver_manager, teardown_function_name)
         teardown_function(driver)
