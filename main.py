@@ -26,7 +26,6 @@ for function_name in dir(driver_manager):
 
             for current_width, current_height in [res_tuple, res_tuple[::-1]]:
                 driver, dir_name = current_visit(driver)
-                driver.save_screenshot(f"{path}/test.png")
                 driver.set_window_size(current_width, current_height)
                 driver.execute_script(f"window.scrollTo(0,0)")
 
