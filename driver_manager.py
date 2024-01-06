@@ -39,7 +39,7 @@ def create_driver():
 def visit_mainpage(driver=None):
     if driver is None:
         driver = create_driver()
-    driver.maximize_window()
+    driver.set_window_size(1920, 1080)
     driver.get('http://hotel-v3.progmasters.hu/')
     return driver, "mainpage"
 
@@ -50,7 +50,7 @@ def post_mainpage(driver):
 def visit_register_page(driver=None):
     if driver is None:
         driver = create_driver()
-    driver.maximize_window()
+    driver.set_window_size(1920, 1080)
     driver.get('http://hotel-v3.progmasters.hu/')
     driver.find_element(By.ID, 'dropbar').click()
     driver.find_element(By.XPATH, '//a[text()="Vendég"]').click()
